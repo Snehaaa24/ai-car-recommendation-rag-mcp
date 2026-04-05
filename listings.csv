@@ -1,0 +1,26 @@
+id,make,model,year,fuel,transmission,kms_driven,city,price_lakhs,condition
+1,Maruti,Swift,2019,Petrol,Manual,35000,Mumbai,5.5,Good
+2,Hyundai,Creta,2020,Petrol,Automatic,28000,Pune,12.5,Excellent
+3,Honda,City,2018,Petrol,Manual,52000,Mumbai,7.8,Good
+4,Toyota,Innova,2017,Diesel,Manual,78000,Delhi,11.2,Fair
+5,Maruti,Baleno,2021,Petrol,Manual,18000,Bangalore,6.9,Excellent
+6,Hyundai,i20,2019,Petrol,Manual,41000,Chennai,5.8,Good
+7,Kia,Seltos,2021,Petrol,Automatic,22000,Mumbai,14.2,Excellent
+8,Tata,Nexon,2020,Electric,Automatic,31000,Pune,10.5,Good
+9,Ford,EcoSport,2018,Diesel,Manual,63000,Delhi,6.4,Fair
+10,Maruti,Dzire,2020,Petrol,Manual,29000,Bangalore,6.1,Good
+11,Honda,Amaze,2019,Diesel,Manual,44000,Chennai,6.7,Good
+12,Volkswagen,Polo,2018,Petrol,Manual,55000,Mumbai,5.2,Fair
+13,Hyundai,Venue,2021,Petrol,Automatic,15000,Pune,9.8,Excellent
+14,Tata,Harrier,2020,Diesel,Automatic,38000,Delhi,14.8,Good
+15,Renault,Kwid,2019,Petrol,Manual,47000,Bangalore,3.4,Fair
+16,Maruti,Ertiga,2018,Petrol,Manual,61000,Chennai,7.1,Good
+17,Kia,Sonet,2021,Diesel,Automatic,19000,Mumbai,10.9,Excellent
+18,Hyundai,Tucson,2019,Diesel,Automatic,42000,Pune,17.5,Good
+19,Toyota,Fortuner,2018,Diesel,Automatic,71000,Delhi,24.5,Fair
+20,Maruti,WagonR,2021,CNG,Manual,23000,Bangalore,5.3,Good
+21,Honda,WR-V,2019,Petrol,Manual,38000,Chennai,7.4,Good
+22,Tata,Altroz,2021,Petrol,Manual,12000,Mumbai,7.2,Excellent
+23,Hyundai,Aura,2020,Petrol,Manual,33000,Pune,6.3,Good
+24,Maruti,Vitara Brezza,2019,Petrol,Manual,46000,Delhi,8.1,Good
+25,MG,Hector,2020,Petrol,Manual,35000,Bangalore,13.6,Good
