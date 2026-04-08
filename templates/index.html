@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Car Price Researcher</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 40px; color: #333; }
+        .container { max-width: 800px; margin: auto; }
+        .search-section { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; margin-bottom: 30px; }
+        input[type="text"] { width: 70%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.3s; }
+        input[type="text"]:focus { border-color: #007bff; }
+        button { padding: 12px 25px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; margin-left: 10px; transition: background 0.3s; }
+        button:hover { background-color: #0056b3; }
+        
+        .car-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 8px solid #ddd; }
+        h2 { margin-top: 0; color: #1a1a1a; }
+        .price-info { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px; }
+        
+        /* Dynamic Colors for Valuation */
+        .Overpriced { border-left-color: #dc3545; } /* Red */
+        .Underpriced { border-left-color: #28a745; } /* Green */
+        .Fairly { border-left-color: #17a2b8; }      /* Blue/Teal */
+        
+        .status-tag { padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; text-transform: uppercase; }
+        .tag-Overpriced { background: #f8d7da; color: #721c24; }
+        .tag-Underpriced { background: #d4edda; color: #155724; }
+        .tag-Fairly { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search-section">
+            <h1>🚗 AI Car Value Finder</h1>
+            <p>Type what you're looking for, and our RAG model will find it.</p>
+            <form action="/search" method="POST">
+                <input type="text" name="user_query" placeholder="e.g., Cheap Maruti in Mumbai" required>
+                <button type="submit">Analyze</button>
+            </form>
+        </div>
+
+        {% if query %}
+            <h3>Showing top matches for: "{{ query }}"</h3>
+            {% for car in cars %}
+                <div class="car-card {{ car.valuation.split()[0] }}">
+                    <h2>{{ car.make }} {{ car.model }}</h2>
+                    <p><strong>City:</strong> {{ car.city }} | <strong>Condition:</strong> {{ car.condition }}</p>
+                    
+                    <div class="price-info">
+                        <div>
+                            <p style="margin: 0; color: #666;">Listed Price</p>
+                            <span style="font-size: 20px; font-weight: bold;">₹{{ car.price_lakhs }}L</span>
+                        </div>
+                        <div>
+                            <p style="margin: 0; color: #666;">AI Estimate</p>
+                            <span style="font-size: 20px; font-weight: bold;">₹{{ car.predicted_price }}L</span>
+                        </div>
+                        <div class="status-tag tag-{{ car.valuation.split()[0] }}">
+                            {{ car.valuation }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>
