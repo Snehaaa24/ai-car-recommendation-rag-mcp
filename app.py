@@ -1,30 +1,38 @@
-from flask import Flask, render_template, request, jsonify
+from fastapi import FastAPI, Request, Form
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.templating import Jinja2Templates
 
 from rag import search_cars
 from model import check_price
 
-app = Flask(__name__)
+app = FastAPI()
 
-# Home page
-@app.route('/')
-def home():
-    return render_template('index.html')
+templates = Jinja2Templates(directory="templates")
+
+
+# HOME PAGE
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={}
+    )
 
 
 # SEARCH ENDPOINT
-@app.route('/search', methods=['POST'])
-def search():
+@app.post("/search", response_class=HTMLResponse)
+async def search(
+    request: Request,
+    user_query: str = Form(...)
+):
 
     try:
-        query = request.form.get('user_query')
 
-        if not query:
-            return "Query cannot be empty"
+        results = search_cars(user_query)
 
-        # Get RAG search results
-        results = search_cars(query)
-
-        # Add AI price analysis to every car
+        # Add AI price analysis
         for car in results:
 
             price_result = check_price(
@@ -37,26 +45,31 @@ def search():
                 float(car['price_lakhs'])
             )
 
-            # Add new fields for frontend
             car['predicted_price'] = price_result['estimated_price']
             car['valuation'] = price_result['verdict']
 
-        return render_template(
-            'index.html',
-            cars=results,
-            query=query
+        return templates.TemplateResponse(
+            request=request,
+            name="index.html",
+            context={
+                "cars":results,
+                "query":user_query
+            }
         )
 
     except Exception as e:
-        return f"Error: {str(e)}"
+
+        return HTMLResponse(
+            content=f"Error: {str(e)}",
+            status_code=500
+        )
 
 
-# PRICE CHECK ENDPOINT
-@app.route('/price-check', methods=['POST'])
-def price_check():
+# PRICE CHECK API
+@app.post("/price-check")
+async def price_check(data: dict):
 
     try:
-        data = request.json
 
         result = check_price(
             data['make'],
@@ -68,13 +81,11 @@ def price_check():
             float(data['listed_price'])
         )
 
-        return jsonify(result)
+        return JSONResponse(content=result)
 
     except Exception as e:
-        return jsonify({
-            "error": str(e)
-        })
 
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        return JSONResponse(
+            content={"error": str(e)},
+            status_code=500
+        )
