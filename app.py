@@ -1,3 +1,5 @@
+from chat_memory import memory
+
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -10,7 +12,9 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 
+# ---------------------------------
 # HOME PAGE
+# ---------------------------------
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
 
@@ -21,7 +25,9 @@ async def home(request: Request):
     )
 
 
+# ---------------------------------
 # SEARCH ENDPOINT
+# ---------------------------------
 @app.post("/search", response_class=HTMLResponse)
 async def search(
     request: Request,
@@ -30,9 +36,34 @@ async def search(
 
     try:
 
-        results = search_cars(user_query)
+        # -------------------------
+        # Load Previous Chat Memory
+        # -------------------------
+        history = memory.load_memory_variables({})
 
-        # Add AI price analysis
+        previous_context = history.get(
+            "history",
+            ""
+        )
+
+        # -------------------------
+        # Combine Old + New Query
+        # -------------------------
+        full_query = f"{previous_context} {user_query}"
+        print("\n===================")
+        print("PREVIOUS CONTEXT:", previous_context)
+        print("CURRENT QUERY:", user_query)
+        print("FULL QUERY:", full_query)
+        print("===================\n")
+
+        # -------------------------
+        # Search Cars
+        # -------------------------
+        results = search_cars(full_query)
+
+        # -------------------------
+        # Add AI Price Estimation
+        # -------------------------
         for car in results:
 
             price_result = check_price(
@@ -45,15 +76,30 @@ async def search(
                 float(car['price_lakhs'])
             )
 
-            car['predicted_price'] = price_result['estimated_price']
+            car['predicted_price'] = round(
+                price_result['estimated_price'],
+                2
+            )
+
             car['valuation'] = price_result['verdict']
 
+        # -------------------------
+        # Save Conversation Memory
+        # -------------------------
+        memory.save_context(
+            {"input": user_query},
+            {"output": user_query}
+        )
+
+        # -------------------------
+        # Render Frontend
+        # -------------------------
         return templates.TemplateResponse(
             request=request,
             name="index.html",
             context={
-                "cars":results,
-                "query":user_query
+                "cars": results,
+                "query": user_query
             }
         )
 
@@ -65,9 +111,11 @@ async def search(
         )
 
 
+# ---------------------------------
 # PRICE CHECK API
+# ---------------------------------
 @app.post("/price-check")
-async def price_check(data: dict):
+async def price_check_api(data: dict):
 
     try:
 
