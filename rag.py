@@ -230,8 +230,25 @@ def search_cars(query):
     # SAFETY FALLBACK
     # -------------------------
     if len(filtered_df) == 0:
+        return [
+    {
+        "id": -1,
+        "make": "No Results",
+        "model": "",
+        "year": "",
+        "fuel": "",
+        "transmission": "",
+        "kms_driven": "",
+        "city": "",
+        "condition": "",
+        "price_lakhs": 0,
+        "matched_reasons": [],
+        "missing_reasons": [],
+        "message": "No cars found matching your criteria."
+    }
+    ]
 
-        filtered_df = df.copy()
+    
 
     # -------------------------
     # Create Temporary Documents

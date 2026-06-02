@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
-from rag import search_cars
+from agent import ask_agent
 from model import check_price
 
 app = FastAPI()
@@ -59,37 +59,7 @@ async def search(
         # -------------------------
         # Search Cars
         # -------------------------
-        results = search_cars(full_query)
-
-        # -------------------------
-        # Add AI Price Estimation
-        # -------------------------
-        for car in results:
-
-            price_result = check_price(
-                car['make'],
-                car['model'],
-                int(car['year']),
-                car['fuel'],
-                car['transmission'],
-                int(car['kms_driven']),
-                float(car['price_lakhs'])
-            )
-
-            car['predicted_price'] = round(
-                price_result['estimated_price'],
-                2
-            )
-
-            car['valuation'] = price_result['verdict']
-
-        # -------------------------
-        # Save Conversation Memory
-        # -------------------------
-        memory.save_context(
-            {"input": user_query},
-            {"output": user_query}
-        )
+        response = ask_agent(user_query)
 
         # -------------------------
         # Render Frontend
