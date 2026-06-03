@@ -102,16 +102,4 @@ family car under 8 lakhs
 Hyundai,Creta,2020,Petrol,Automatic,28000,12.5
 ```
 
----
-
-## What's Next
-
-- Live used-car listings integration (OLX, CarDekho, etc.)
-- Persistent cross-session memory
-- Smarter recommendation scoring
-- Cloud deployment (AWS/GCP)
-- Voice search support
-
----
-
 *End-to-end AI engineering project — RAG, agentic workflows, ML regression, and a full-stack web interface, all in one.*
